@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="home">
+
+    
+
+    <header>
+        <h1 class="logo"><img src="images\lim.png"></h1>
+    </header>
+
+    <div class="main">
+        <div class="box">
+        <h2 class="title" style="display: block;">Welcome to my website!</h2>
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+        <p>Greetings! This is the personal website for the developer Limit10K. I hope to use this website to share and display any projects I may have in the future. 
+            This website is far from finished, and I have many more exciting things that I wish to implement, so please come back soon! Website not suitable for mobile devices.
+        </div>
+                
+        </p>
+        </div>
+
+        <div class="box">
+        <h2 class="title">Projects</h2>
+
+        </div>
+
+        <div class="box" style="padding-bottom: 10px;">
+        <h2 class="title">Blog</h2>
+        <a href="blog.html#b1" class="linky" style="display: block; margin-bottom: 10px;">(01/09/2026) First blog post!</a>
+        </div>
+
+    </div>
+
+    <div class="side">
+        <div class="box">
+            <h2 class="title">Travel</h2>
+            <a href="index.html" class="linky" style="display: block; margin-bottom: 10px;">Home</a>
+            <a href="blog.html" class="linky" style="display: block; margin-bottom: 10px;">Blogs</a>
+            <a href="projects.html" class="linky" style="display: block; margin-bottom: 20px;">Projects</a>
+        </div>
+
+        <div class="box">
+            <header class="caltitle"> 
+                <h3 class="current-date">May 2025</h3>
+                <div class="buttonss">
+                    <span id="prev" class="symbol">&lt;</span>
+                    <span id="next" class="symbol">&gt;</span>
+                </div>
+            </header>
+            <div class="calendar">
+                <div class="times">
+                    <ul class="weeks">
+                        <li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li>
+                    </ul>
+                    <ul class="days">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="time" id="date"></div>
+            <div class="time" id="text" style="display: none;"></div>
+        </div>
+    </div>
+
+    
+    <script>
+        const currentDate = document.querySelector(".current-date"),
+        daysTag = document.querySelector(".days"),
+        todayDate = document.getElementById("date"),
+        textbox = document.getElementById("text"),
+        prevNextIcon = document.querySelectorAll(".symbol");
+
+        let active = false;
+        let date = new Date(),
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth();
+
+        let timeint = setInterval(dateandtime, 1000);
+        dateandtime();
+
+        document.addEventListener('mousemove',
+        function(e) {
+            let body = document.querySelector('home');
+            let circle = document.createElement('particle');
+            let x = e.offsetX;
+            let y = e.offsetY;
+            circle.style.left = x + "px";
+            circle.style.top = y + "px";
+            let size = 30;
+            circle.style.width = 20 + size + "px";
+            circle.style.height = 20 + size + "px";
+            body.appendChild(circle);
+        }
+    )
+    
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        
+        let calendarEntries = {
+            1: {Date: "6/4/1453", Entry: "apolgy for bad english\nwhere were u wen constantinople die\ni was at house eating baklava when messenger come\n'constantinople is kill'\n'no'"},
+            2: {Date: "1/9/2026", Entry: "Website created!"},
+            3: {Date: "1/1/2027", Entry: "My birthday!!!"}
+        };
+        
+        const renderCalendar = () => {        
+            let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(),
+            lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(),
+            lastDayofMonth = new Date(currYear, currMonth , lastDateofMonth).getDay(),
+            lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate();
+            let liTag = "";
+
+            for(let i = firstDayofMonth; i > 0; i--){
+                liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+            }
+
+            for(let i = 1; i<= lastDateofMonth; i++){
+                dayDate = `${i}/${currMonth + 1}/${currYear}`;
+
+                let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "today" : "";
+                let isEntry = false;
+
+                for(var key in calendarEntries){
+                    if (calendarEntries[key].Date === dayDate){
+                        isEntry = true;
+                    }
+                }
+
+                if (isEntry && isToday){
+                    liTag += `<li class="lucky" id="${dayDate}" onclick="coolText(id)">${i}</li>`;
+                } else if (isToday){
+                    liTag += `<li class="${isToday}" id="${dayDate}" onclick="coolText(id)">${i}</li>`;
+                } else if (isEntry){
+                    liTag += `<li class="entry" id="${dayDate}" onclick="coolText(id)">${i}</li>`;
+                } else{
+                    liTag += `<li id="${dayDate}" onclick="coolText(id)">${i}</li>`;
+                }
+            }
+
+            for(let i = lastDayofMonth; i < 6; i++){
+                liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+            }
+
+            currentDate.innerHTML = `${months[currMonth]} ${currYear}`;
+            daysTag.innerHTML = liTag;
+        }
+
+        renderCalendar();
+
+        prevNextIcon.forEach(sym => {
+            sym.addEventListener("click", () =>{
+                currMonth = sym.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+                if(currMonth < 0 || currMonth > 11) {
+                    date = new Date(currYear, currMonth);
+                    currYear = date.getFullYear();
+                    currMonth = date.getMonth();
+                } else{
+                    date = new Date();
+                }
+                renderCalendar();
+            });
+        });
+
+        function dateandtime(){
+            const now = new Date();
+            todayDate.innerHTML = `Todays date is ${now.toLocaleDateString()}!\n
+                                Current time is ${now.toLocaleTimeString()}!`;
+        }
+
+        function coolText(dayDate){
+            for(var key in calendarEntries){
+                if (calendarEntries[key].Date === dayDate){
+                    active = true;
+                    todayDate.style.display = "none";
+                    textbox.style.display = "block";
+                    text.innerHTML = calendarEntries[key].Entry;
+                    return;       
+                }
+            }
+            active = false;
+            todayDate.style.display = "block";
+            textbox.style.display = "none";
+        }
+
+    </script>
+
+</body>
+</html>

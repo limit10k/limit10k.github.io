@@ -1,0 +1,209 @@
+@font-face {
+  font-family: 'Monakrkr';
+  src:  url('monakrkr.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body{
+    font-family: 'Monakrkr', monospace;
+    color:aliceblue;
+    height: 100%;
+    margin: auto;
+    width: 100%;
+    background-color: black;
+}
+
+
+.logo{
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    filter: drop-shadow(0px 0px 10px #5aecbc);
+}
+
+.box{
+    padding: 10px; 
+    padding-top: 0px; 
+    padding-bottom: 0px;
+    margin-bottom: 15px;
+    height: auto;
+    border: 2px inset aquamarine;
+    border-radius: 6px;
+
+}
+
+.blog{
+    padding: 10px; 
+    padding-top: 0px;
+    margin-bottom: 15px;
+    height: auto;
+    border: 2px solid aquamarine;
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(58, 255, 189, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.main{
+    margin-left: 5%;
+    float: left;
+    width: 74%;
+}
+
+.side{
+    margin-right: 5%;
+    float: right;
+    width: 14%;
+}
+
+.linky:link { 
+    color:aquamarine;
+  text-decoration: none; 
+} 
+.linky:visited { 
+    color:aquamarine;
+  text-decoration: none; 
+} 
+.linky:hover { 
+  text-decoration: none; 
+} 
+.linky:active { 
+  text-decoration: none; 
+}
+
+
+/* Calendar CSS*/
+
+.calendar ul{
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+    padding-inline-start: 0px;
+    font-size: 0.8rem;
+}
+
+.calendar ul li{
+    width: calc(100% / 7);
+}
+
+.calendar .weeks{
+    margin: 0px;
+}
+
+.calendar .weeks li{
+    font-weight: bold;
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 50%;
+    color: white;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.calendar .weeks li:first-child{
+    border-top-left-radius: 3px;
+}
+
+.calendar .weeks li:last-child{
+    border-top-right-radius: 3px;
+}
+
+.calendar .days{
+    margin: 0px;
+}
+
+.calendar .days li{
+    cursor: pointer;
+    margin-top: 10px;
+    background: lightblue;
+    margin: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.calendar .days li.inactive{
+    color: grey;
+}
+
+.calendar .days li.today{
+    color:rgb(253, 0, 0);
+}
+
+.calendar .days li.entry{
+    color:rgb(253, 0, 198);
+}
+
+.calendar .days li.lucky{
+    color:rgb(22, 128, 40);
+}
+
+.calendar .times{
+    border: 2px inset aquamarine;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, rgba(58, 255, 189, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+.calendar .days li:hover{
+    opacity: 50%;
+}
+
+.box .caltitle{
+    display: flex;
+    align-items: center;
+    border: 2px inset aquamarine;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(58, 255, 189, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.current-date{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.buttonss{
+    position: absolute;
+    right: 0;
+}
+
+.symbol{
+    border: 2px inset aquamarine;
+    border-radius: 6px;
+    padding: 5px;
+    cursor: pointer;
+    margin: 5px;
+    background: linear-gradient(135deg, rgba(58, 255, 189, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.symbol:hover{
+    background: aquamarine;
+}
+
+.time{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* End of calendar */
+
