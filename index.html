@@ -34,6 +34,7 @@
 
         <div class="box" style="padding-bottom: 10px;">
         <h2 class="title">Blog</h2>
+        <a href="blog.html#b2" class="linky" style="display: block; margin-bottom: 10px;">(03/09/2026) Music player added</a>
         <a href="blog.html#b1" class="linky" style="display: block; margin-bottom: 10px;">(01/09/2026) First blog post!</a>
         </div>
 
@@ -70,7 +71,208 @@
             <div class="time" id="date"></div>
             <div class="time" id="text" style="display: none;"></div>
         </div>
+
+        <div class="box">
+            <div class="blog" style="margin-top: 10px;">
+                <div id="player" style="display: none;"></div>
+                <div class="spinny" style="position: relative;">
+                    <img src="images/vinyl.png" style="width: 100%; height: auto; display: block; margin-top: 10px; margin-bottom: 10px; position: relative; z-index: 2;">
+                    <img id="thumb" src="images/placeholder.jpg" style="width: auto; height: 45%; display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                </div>
+                <p class="stitle" style="text-align: center; color: aquamarine;">No song yet...</p>
+                <div class="progress">
+                    <span id="currTime">0:00</span>
+                    <input type="range" class ="bar" id="progressBar" value="0" min="0" max="100" step="0.1">
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="mcontrol" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span id="back" class="symbol">⏮</span>
+                    <span id="play" class="symbol">⏵</span> <!-- ⏸ pause/play ⏵ -->
+                    <span id="forward" class="symbol">⏭</span>
+                </div>
+                <div class="volume">
+                    <span id="mute" style="cursor: pointer;">🔊</span>
+                    <input type="range" class="bar" id="volumeBar" value="100" min="0" max="100">
+                </div>
+            </div>
+            <p>More playlists to come! (If the video has a copyright law that prevents it from being embed, it won't play :( )</p>
+        </div>
     </div>
+
+
+    <script type="module">
+        
+        import axios from 'https://esm.sh/axios';
+        
+        const API_KEY = 'AIzaSyD2VddUVZUo5Hx2HfAq6XItnJF20zKSDQs';
+        const playlist1 = 'PLfHWmAjEOMpU';
+        let thumbnail = document.getElementById('thumb');
+        let songTitle = document.querySelector('.stitle');
+        let player;
+        const progressBar = document.getElementById('progressBar');
+        const volumeBar = document.getElementById('volumeBar');
+        const currTime = document.getElementById('currTime');
+        const duration = document.getElementById('duration');
+        document.getElementById('mute').addEventListener('click', muteUnmute);
+        let progressInterval;
+        document.getElementById('forward').addEventListener('click', forward);
+        document.getElementById('back').addEventListener('click', back);
+        const spin = document.querySelector('.spinny');
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        let currentIndex = 0;
+        let items = [];
+        let playerReady = false;
+
+        async function fetchPlaylist() {
+            try {
+                const res = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
+                    params: {
+                        part: 'snippet',
+                        maxResults: 50,
+                        playlistId: playlist1,
+                        key: API_KEY
+                    }
+                });
+                items = res.data.items;
+                console.log(res.data.items);
+                updateUI();
+                onYouTubeIframeAPIReady();
+            } catch (error) {
+                console.error('Error fetching playlist:', error);
+            }
+        }
+
+          function onYouTubeIframeAPIReady() {
+            if (items.length === 0) {
+            const waitForItems = setInterval(() => {
+                if (items.length > 0) {
+                clearInterval(waitForItems);
+                createPlayer();
+                }
+            }, 100);
+            } else {
+            createPlayer();
+            }
+        }
+
+        function createPlayer() {
+            player = new YT.Player('player', {
+            height: '1',
+            width: '1',
+            videoId: items[currentIndex].snippet.resourceId.videoId,
+            playerVars: { autoplay: 0, controls: 0 },
+            events: {
+                onReady: () => { 
+                    playerReady = true;
+                    updateProgress();},
+                onStateChange: stateChange
+            }
+            });
+        }
+
+        function stateChange(event){
+            if(event.data === YT.PlayerState.ENDED){
+                forward();
+            }
+            if(event.data === YT.PlayerState.PLAYING){
+                play.innerHTML = '⏸';
+                spin.style.animationPlayState = 'running';
+            }
+            if(event.data === YT.PlayerState.PAUSED){
+                play.innerHTML = '⏵';
+                spin.style.animationPlayState = 'paused';
+            }
+        }
+
+        function updateUI() {
+            if (items.length > 0) {
+                const videoId = items[currentIndex].snippet.resourceId.videoId;
+                thumbnail.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                songTitle.textContent = items[currentIndex].snippet.title;
+            }
+        }
+
+        function playPause() {
+            if (!playerReady) return;
+            player.loadVideoById(items[currentIndex].snippet.resourceId.videoId);
+            progressBar.value = 0;
+            updateUI();
+        }
+
+        function forward(){
+            if (!playerReady) return;
+            currentIndex = (currentIndex + 1) % items.length;
+            playPause();
+        }
+
+        function back(){
+            if (!playerReady) return;
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            playPause();
+        }
+
+        play.addEventListener('click', () => {
+            if(!playerReady) return;
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateProgress() {
+            clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if(!playerReady || !player.getDuration) return;
+
+                const current = player.getCurrentTime();
+                const total = player.getDuration();
+
+                if (total > 0){
+                    progressBar.value = (current / total) * 100;
+                }
+                currTime.textContent = formatTime(current);
+                duration.textContent = formatTime(total);
+                
+
+            }, 500);
+        }
+
+        function muteUnmute() {
+            if(!playerReady) return;
+            if (player.isMuted()) {
+                player.unMute();
+                mute.innerHTML = '🔊';
+            } else {
+                player.mute();
+                mute.innerHTML = '🔇';
+            }
+        }
+
+        progressBar.addEventListener('input', () => {
+            if(!playerReady) return;
+            const duration = player.getDuration();
+            const seekTo = (progressBar.value / 100) * player.getDuration();
+            player.seekTo(seekTo, true);
+        });
+
+        volumeBar.addEventListener('input', () => {
+            if(!playerReady) return;
+            player.setVolume(volumeBar.value);
+        });
+
+        fetchPlaylist();
+
+    </script>
+
 
     
     <script>
@@ -90,7 +292,6 @@
 
         document.addEventListener('mousemove',
         function(e) {
-            let body = document.querySelector('home');
             let circle = document.createElement('particle');
             let x = e.offsetX;
             let y = e.offsetY;
@@ -99,7 +300,6 @@
             let size = 30;
             circle.style.width = 20 + size + "px";
             circle.style.height = 20 + size + "px";
-            body.appendChild(circle);
         }
     )
     
@@ -107,9 +307,10 @@
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         
         let calendarEntries = {
-            1: {Date: "6/4/1453", Entry: "apolgy for bad english\nwhere were u wen constantinople die\ni was at house eating baklava when messenger come\n'constantinople is kill'\n'no'"},
+            1: {Date: "29/5/1453", Entry: "apolgy for bad english\nwhere were u wen constantinople die\ni was at house eating baklava when messenger come\n'constantinople is kill'\n'no'"},
             2: {Date: "1/9/2026", Entry: "Website created!"},
-            3: {Date: "1/1/2027", Entry: "My birthday!!!"}
+            3: {Date: "3/9/2026", Entry: "Music player feature added!"},
+            4: {Date: "1/1/2027", Entry: "My birthday!!!"}
         };
         
         const renderCalendar = () => {        
@@ -158,8 +359,9 @@
 
         prevNextIcon.forEach(sym => {
             sym.addEventListener("click", () =>{
-                currMonth = sym.id === "prev" ? currMonth - 1 : currMonth + 1;
-
+                if (sym.id === "prev") currMonth--;
+                if (sym.id === "next") currMonth++;
+                
                 if(currMonth < 0 || currMonth > 11) {
                     date = new Date(currYear, currMonth);
                     currYear = date.getFullYear();
