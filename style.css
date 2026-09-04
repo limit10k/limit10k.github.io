@@ -263,6 +263,30 @@ body{
     margin-bottom: 10px;
 }
 
+.load{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.load input{
+    width: 80%;
+    background-color: transparent;
+    color: aliceblue;
+    border: 2px inset aquamarine;
+    border-radius: 6px;
+    padding: 5px;
+    background: linear-gradient(135deg, rgba(58, 255, 189, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+}
+
+.load button{
+    width: 20%;
+    font-size: 0.7em;
+    overflow: hidden;
+}
+
 /* Making sure this gets pushed... */
 
 .bar {

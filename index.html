@@ -95,7 +95,16 @@
                     <input type="range" class="bar" id="volumeBar" value="100" min="0" max="100">
                 </div>
             </div>
-            <p>More playlists to come! (If the video has a copyright law that prevents it from being embed, it won't play :( ) Ad-blocker recommended. If faced with an ad again, just press play to skip it.</p>
+            <div class="playlists" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                <span id="pl1" class="symbol">Playlist 1</span>
+                <span id="pl2" class="symbol">Playlist 2</span>
+            </div>
+            <div class="load">
+                <input type="text" id="playlistInput" placeholder="Enter playlist ID" style="font-family: 'Monakrkr', monospace;">
+                <button id="userpl" class="symbol" style="color: aliceblue; font-family: 'Monakrkr', monospace;">Load</button>
+            </div>
+            
+            <p>You can enter the ID of a playlist you would like up here! (If the video has a copyright law that prevents it from being embed, it won't play :/ ) Ad-blocker recommended. If faced with an ad again, just press play to skip it.</p>
         </div>
     </div>
 
@@ -106,6 +115,7 @@
         
         const API_KEY = 'AIzaSyD2VddUVZUo5Hx2HfAq6XItnJF20zKSDQs';
         const playlist1 = 'PLfHWmAjEOMpU';
+        const playlist2 = 'PLO7ynMTiRvEY';
         let thumbnail = document.getElementById('thumb');
         let songTitle = document.querySelector('.stitle');
         let player;
@@ -113,10 +123,19 @@
         const volumeBar = document.getElementById('volumeBar');
         const currTime = document.getElementById('currTime');
         const duration = document.getElementById('duration');
+        const playlistInput = document.getElementById('playlistInput');
         document.getElementById('mute').addEventListener('click', muteUnmute);
         let progressInterval;
         document.getElementById('forward').addEventListener('click', forward);
         document.getElementById('back').addEventListener('click', back);
+        document.getElementById('pl1').addEventListener('click', () => switchPlaylist(playlist1));
+        document.getElementById('pl2').addEventListener('click', () => switchPlaylist(playlist2));
+        document.getElementById('userpl').addEventListener('click', () => {
+            const userPlaylistId = document.getElementById('playlistInput').value.trim();
+            if (userPlaylistId) {
+                switchPlaylist(userPlaylistId);
+            }
+        });
         const spin = document.querySelector('.spinny');
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -124,6 +143,7 @@
         let currentIndex = 0;
         let items = [];
         let playerReady = false;
+        let currentPlaylist = playlist1;
 
         async function fetchPlaylist() {
             try {
@@ -131,7 +151,7 @@
                     params: {
                         part: 'snippet',
                         maxResults: 50,
-                        playlistId: playlist1,
+                        playlistId: currentPlaylist,
                         key: API_KEY
                     }
                 });
@@ -141,6 +161,8 @@
                 onYouTubeIframeAPIReady();
             } catch (error) {
                 console.error('Error fetching playlist:', error);
+                songTitle.innerHTML = 'Error loading playlist';
+                thumbnail.src = 'images/image.png';
             }
         }
 
@@ -155,6 +177,18 @@
             } else {
             createPlayer();
             }
+        }
+
+        function switchPlaylist(playlistId) {
+            currentPlaylist = playlistId;
+            currentIndex = 0;
+            playerReady = false;
+            if (player) {
+                player.destroy();
+                player = null;
+            }
+            stateChange({ data: YT.PlayerState.PAUSED });
+            fetchPlaylist();
         }
 
         function createPlayer() {
