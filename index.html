@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favi.ico">
 </head>
 
 <body class="home">
@@ -86,12 +87,12 @@
                     <span id="duration">0:00</span>
                 </div>
                 <div class="mcontrol" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <span id="back" class="symbol">⏮</span>
-                    <span id="play" class="symbol">⏵</span> <!-- ⏸ pause/play ⏵ -->
-                    <span id="forward" class="symbol">⏭</span>
+                    <span id="back" class="symbol"><img class="icons" src="images/skip.svg"></span>
+                    <span id="play" class="symbol"><img class="icons" src="images/play.svg"></span> <!-- ⏸ pause/play ⏵ -->
+                    <span id="forward" class="symbol"><img class="icons" src="images/next.svg"></span>
                 </div>
                 <div class="volume">
-                    <span id="mute" style="cursor: pointer;">🔊</span>
+                    <span id="mute" style="cursor: pointer;"><img class="audio-icon" src="images/audio.svg"></span>
                     <input type="range" class="bar" id="volumeBar" value="100" min="0" max="100">
                 </div>
             </div>
@@ -104,7 +105,7 @@
                 <button id="userpl" class="symbol" style="color: aliceblue; font-family: 'Monakrkr', monospace;">Load</button>
             </div>
             
-            <p>You can enter the ID of a YouTube playlist you would like up here! <br> (If the video has a copyright law that prevents it from being embed, it won't play :/ ) <br> Ad-blocker recommended. If faced with an ad again, just press play to skip it.</p>
+            <p>You can enter the ID of a YouTube playlist you would like up here! (Only first 100 songs will show)<br>If the video has a copyright law that prevents it from being embed, it won't play :/ <br> Ad-blocker recommended. If faced with an ad again, just press play to skip it.</p>
         </div>
     </div>
 
@@ -150,7 +151,7 @@
                 const res = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
                     params: {
                         part: 'snippet',
-                        maxResults: 50,
+                        maxResults: 100,
                         playlistId: currentPlaylist,
                         key: API_KEY
                     }
@@ -211,11 +212,11 @@
                 forward();
             }
             if(event.data === YT.PlayerState.PLAYING){
-                play.innerHTML = '⏸';
+                play.innerHTML = '<img class="icons" src="images/pause.svg">';
                 spin.style.animationPlayState = 'running';
             }
             if(event.data === YT.PlayerState.PAUSED){
-                play.innerHTML = '⏵';
+                play.innerHTML = '<img class="icons" src="images/play.svg">';
                 spin.style.animationPlayState = 'paused';
             }
         }
@@ -284,10 +285,10 @@
             if(!playerReady) return;
             if (player.isMuted()) {
                 player.unMute();
-                mute.innerHTML = '🔊';
+                mute.innerHTML = '<img class="audio-icon" src="images/audio.svg">';
             } else {
                 player.mute();
-                mute.innerHTML = '🔇';
+                mute.innerHTML = '<img class="audio-icon" src="images/mute.svg">';
             }
         }
 

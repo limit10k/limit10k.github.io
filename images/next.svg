@@ -1,0 +1,13 @@
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="800"
+                     height="800"
+                     viewBox="0 0 24 24">
+                    <g transform="rotate(-180, 12, 12)">
+                        
+<path xmlns="http://www.w3.org/2000/svg" d="M20 4L8.66667 12L20 20V4Z" fill="aliceblue"/>
+<path xmlns="http://www.w3.org/2000/svg" d="M4 20H6.66667V4H4V20Z" fill="aliceblue"/>
+
+                    </g>
+                </svg>
+            

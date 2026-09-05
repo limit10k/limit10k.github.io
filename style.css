@@ -287,6 +287,17 @@ body{
     overflow: hidden;
 }
 
+.icons{
+    padding: 2px;
+    width: 16px;
+    height: auto;
+}
+
+.audio-icon{
+    width: 25px;
+    height: auto;
+}
+
 /* Making sure this gets pushed... */
 
 .bar {
