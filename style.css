@@ -57,13 +57,13 @@ body{
     .main{
         margin-left: 5%;
         float: left;
-        width: 74%;
+        width: 64%;
     }
 
     .side{
         margin-right: 5%;
         float: right;
-        width: 14%;
+        width: 24%;
     }
 
 }
